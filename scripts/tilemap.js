@@ -30,13 +30,21 @@ export class TileMap {
         this.tileHeight = this.tileset.tileHeight;
     }
 
-    draw(g) {
+    draw(g, meX, meY) {
         g.save();
         {
             g.translate(this.offsetX * this.tileWidth, this.offsetY * this.tileHeight);
             for (let y = 0; y < this.height; ++y) {
                 for (let x = 0; x < this.width; ++x) {
-                    const tile = this.tiles[y][x];
+                    let tile = this.tiles[y][x];
+                    const maxDist = Math.max(Math.abs(x - meX), Math.abs(y - meY))
+                    if (tile == 0) {
+                        if (maxDist <= 3) {
+                            tile = 2;
+                        } else if (maxDist <= 8) {
+                            tile = 3;
+                        }
+                    }
                     this.tileset.draw(g, tile, x, y);
                 }
             }

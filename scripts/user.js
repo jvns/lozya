@@ -131,18 +131,20 @@ export class User {
     readUser(user, audioDistMin, audioDistMax) {
         if (this.isMe
             && !user.isMe) {
-            const dx = user.tx - this.tx,
-                dy = user.ty - this.ty,
-                distSq = dx * dx + dy * dy,
-                dist = clamp(Math.sqrt(distSq), audioDistMin, audioDistMax);
+            const dist = Math.max(Math.abs(user.tx - this.tx), Math.abs(user.ty - this.ty));
 
             if (dist !== user.distToMe) {
+                let volume = 1;
+                if (maxDist > 8) {
+                    volume = 0;
+                } else if (maxDist > 3) {
+                    volume = 0.2;
+                }
                 user.distToMe = dist;
-                const volume = 1 - project(dist, audioDistMin, audioDistMax),
-                    evt = {
-                        user: user.id,
-                        volume: volume
-                    };
+                const evt = {
+                    user: user.id,
+                    volume: volume
+                };
 
                 for (let func of this.eventHandlers.changeUserVolume) {
                     func(evt);
