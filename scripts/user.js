@@ -135,9 +135,9 @@ export class User {
 
             if (dist !== user.distToMe) {
                 let volume = 1;
-                if (maxDist > 8) {
+                if (dist > 8) {
                     volume = 0;
-                } else if (maxDist > 3) {
+                } else if (dist > 3) {
                     volume = 0.2;
                 }
                 user.distToMe = dist;
